@@ -1,0 +1,33 @@
+
+export default [
+   {name:  "10-10: Fight In Progress"},
+   {name:  "10-11: Dog Case"},
+   {name:  "10-15: Civil Disturbance"},
+   {name:  "10-16: Domestic Problem"},
+   {name:   "10-17: Meet Complainant"},
+   {name:   "10-25: Report in Person (Meet)"},
+   {name:   "10-31: Crime in Progress"},
+   {name:   "10-32: Man with Gun"},
+   {name:   "10-33: Emergency"},
+   {name:   "10-34: Riot"},
+  { name:   "10-35: Major Crime Alert"},
+   {name:   "10-37: Suspicious Vehicle"},
+   {name:   "10-45: Animal Carcass"},
+   {name:    "10-46: Assist Motorist"},
+   {name:    "10-52: Ambulance Needed"},
+   {name:   "10-55: Intoxicated Driver"},
+   {name:   "10-56: Intoxicated Pedestrian"},
+   {name:   "10-57: Hit and Run"},
+   {name:  "10-59: Escort"},
+   {name:   "10-70: Fire Alarm"},
+   {name:   "10-73: Smoke Report"},
+   {name:   "10-80: Chase in Progress"},
+   {name:   "10-89: Bomb Threat"},
+   {name:   "10-90: Bank Alarm"},
+   {name:   "10-91: Pick Up Prisoner / Subject"},
+  { name:   "10-92: Improperly Parked Vehicle"},
+   {name:   "10-94: Street Racing"},
+   {name:   "10-96: Mental Subject"},
+   {name:  "10-98: Prison / Jail Break"}
+
+]
