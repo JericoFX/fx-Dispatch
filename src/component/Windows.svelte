@@ -2,14 +2,12 @@
   import InformationPanel from './InformationPanel.svelte';
 
   import {fade} from 'svelte/transition';
-  $: cpu = Math.random() * 100;
+  $: cpu = 0
   setInterval(() => {
     cpu = Math.random() * 100;
   }, 5000);
 let Close = true
 </script>
-
-
 
 {#if Close}
 <div class="window-body  non-selectable" in:fade="{{duration: 100}}" >

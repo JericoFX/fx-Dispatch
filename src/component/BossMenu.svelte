@@ -1,16 +1,20 @@
-<script>
+<script lang="ts">
   import {push} from 'svelte-spa-router';
   import DepositWithDialog from './DepositWithDialog.svelte';
   import PlayerData from './Dialogos/PlayerData.svelte';
   import {JOB_NAME, JOB_MONEY, Tables_log, PLAYER_DATA} from '../store/store';
-  let Selection = '';
+import { fetchNui } from '../util/fetchNui';
+  $: Selection = '';
   let open = false;
   let withdraw = 0;
   let deposit = 0;
   let OpenData1 = false;
-  const HandleData = (Data, money) => {
+  const HandleData = (Data: string, money: number) => {
+    console.log(Data);
+    
     Selection = Data;
     open = true;
+    Monto = money
   };
 
   $: Detail = '';
@@ -30,14 +34,12 @@
     OpenData1 = false;
   }
 
-  function OpenData(Data) {
+  function OpenData(Data: { Type: string; Date: string; Monto: number;Name:string; }) {
     OpenData1 = true;
     Detail = Data.Type;
-    name = 'Jerico';
-    lastName = 'FX';
+    name = Data.Name;
     Date1 = Data.Date;
     Monto = Data.Monto;
-    console.log(Data);
   }
 </script>
 

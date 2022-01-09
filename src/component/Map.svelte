@@ -1,18 +1,15 @@
 <script lang="ts">
   import * as L from 'leaflet';
   import 'leaflet/dist/leaflet.css';
-  import * as markerIcons from '../util/markers';
   import MarkerPopup from '../component/MarkerPopup.svelte';
   import {PLAYER_DISPATCH} from '../store/store';
-  import {createEventDispatcher, onMount} from 'svelte';
-
+  import {createEventDispatcher, onDestroy, onMount} from 'svelte';
+import { DEBUG } from '../util/config';
   export let open = false;
-  export let Expanded = false;
-  export let MenuShow = false;
-  export let Maximized = false;
+  export const Expanded = true;
   const dispatch = createEventDispatcher();
   $: open;
-
+  let Handle = [];
   function closeModal() {
     open = false;
     dispatch('closeModal', {open});
@@ -20,16 +17,13 @@
   var gtaOffset = 0.66;
 
   const greenIcon = L.icon({
-    iconUrl: '/icons/signo-de-exclamacion.png',
+    iconUrl: 'icons/signo-de-exclamacion.png',
     iconSize: [32, 32], // size of the icon
     shadowSize: [38, 35], // size of the shadow
     shadowAnchor: [4, 62], // the same for the shadow
   });
   let map: {fitBounds: (arg0: any) => void; addLayer: (arg0: any) => void; removeLayer: (arg0: any) => void; flyTo: (arg0: any, arg1: number) => void};
 
-  // const bottomLeft = [-3950, -3960];
-  // const topRight = [8320, 5150];
-  // const bounds = [bottomLeft, topRight];
   var mapMinZoom = 2;
   var mapMaxZoom = 7;
   var mapMaxResolution = 0.25;
@@ -68,14 +62,14 @@
       corner2 = L.latLng(topRight),
       bounds1 = L.latLngBounds(corner1, corner2);
     map.fitBounds(bounds1);
-    map.setMaxBounds(bounds1)
+    map.setMaxBounds(bounds1);
     return map;
   }
 
-  function bindPopup(marker: {bindPopup: (arg0: () => any) => void; on: (arg0: string, arg1: () => void) => void}, createFn: {(m: any): MarkerPopup; (arg0: any): MarkerPopup}) {
+  async function  bindPopup(marker: { bindPopup: any; on: any; }, createFn: { (m: any): MarkerPopup; (m: any): MarkerPopup; (arg0: any): MarkerPopup|PromiseLike<MarkerPopup>; }) {
     let popupComponent: MarkerPopup;
-    marker.bindPopup(() => {
-      let container = L.DomUtil.create('div');
+    marker.bindPopup(async () => {
+      let container = await L.DomUtil.create('div');
 
       popupComponent = createFn(container);
       return container;
@@ -93,27 +87,20 @@
     });
   }
 
-  function gtaToLatLng(x: number, y: number) {
+ function gtaToLatLng(x: number, y: number) {
     var lng = x * gtaOffset + mapCenterLng;
     var lat = y * gtaOffset + mapCenterLat;
-    return L.latLng(lat, lng);
+    return  L.latLng(lat, lng);
   }
-  let marker;
+  let marker: { bindPopup: (arg0: () => any) => void; on: (arg0: string,arg1: () => void) => void; };
   let count = 0;
   let Markerid = [];
+
   function ChangeLocation(Data: any) {
-    Markerid[Data.Id];
-    if (!Markerid[Data.Id]) {
-      Markerid[Data.Id] = marker = L.marker(gtaToLatLng(Data.Coords.x, Data.Coords.y), {icon: greenIcon}).addTo(map);
-      map.addLayer(marker);
-    } else {
-      map.removeLayer(Markerid[Data.Id]);
-      Markerid[Data.Id] = marker = L.marker(gtaToLatLng(Data.Coords.x, Data.Coords.y), {icon: greenIcon}).addTo(map);
-      map.addLayer(marker);
-    }
-    map.flyTo(gtaToLatLng(Data.Coords.x, Data.Coords.y),3,{
-      animate:true,
-      duration:0.25
+    UpdateMarkers();
+    map.flyTo(gtaToLatLng(Data.Coords.x, Data.Coords.y), 3, {
+      animate: true,
+      duration: 0.25,
     });
     bindPopup(marker, function (m: any) {
       let c = new MarkerPopup({
@@ -127,11 +114,55 @@
     });
   }
 
+ 
+function DeleteMarkers() {
+    for (const key in Markerid) {
+      if (Object.prototype.hasOwnProperty.call(Markerid, key)) {
+        if (map.hasLayer(Markerid[key])) {
+          map.removeLayer(Markerid[key]);
+          Markerid[key] = null
+        }
+      }
+    }
+  }
 
+ function UpdateMarkers() {
+    for (const key in $PLAYER_DISPATCH) {
+      if (Object.prototype.hasOwnProperty.call($PLAYER_DISPATCH, key)) {
+        const element = $PLAYER_DISPATCH[key];
+        Markerid[element.Id] = 0;
+        if (!Markerid[element.Id]) {
+          Markerid[element.Id] = marker = L.marker(gtaToLatLng(element.Coords.x, element.Coords.y), {icon: greenIcon}).addTo(map);
+          map.addLayer(marker);
+        } else {
+          map.removeLayer(Markerid[element.Id]);
+          Markerid[element.Id] = marker = L.marker(gtaToLatLng(element.Coords.x, element.Coords.y), {icon: greenIcon}).addTo(map);
+          map.addLayer(marker);
+        }
+        bindPopup(marker, function (m: any) {
+          let c = new MarkerPopup({
+            target: m,
+            props: {
+              name: element.Name,
+              Description: element.Message,
+              Street: element.Street,
+            },
+          });
+          return c;
+        });
+      }
+    }
+  }
 </script>
 
 {#if open}
-  <div class="window fixed-center" style={Maximized ? 'width:100vh;max-width:100vh;height:100vh;' : 'width:92vh;max-width:100vh'}>
+  <div
+    class="window fixed-center fit"
+    style="width: 135vh;
+  max-width: 150vh;
+  height: 100vh;"
+    use:UpdateMarkers
+  >
     <div class="title-bar">
       <div class="title-bar-text">Actividad</div>
       <div class="title-bar-controls">
@@ -145,22 +176,21 @@
       width: 557px;"
       >
         <legend>Dispatch Map</legend>
-        <div class="map" style={Maximized ? 'position: relative;width: 95vh;height: 91vh;' : 'height:400px;width:100%'} use:mapAction />
+        <div class="map" style="position: relative;width: 95vh;height: 91vh;" use:mapAction />
       </fieldset>
-      {#if MenuShow}
         <div
           class="absolute-right float-right"
           style="    top: 34px;
-        right: 12px;
-        bottom: 0px;
-        overflow: scroll;
-        height: 41vh;
-        width: 30vh;
-        max-width: 42vh;"
+          right: 12px;
+          bottom: 0px;
+          overflow: scroll;
+          height: 94vh;
+          width: 40vh;
+          max-width: 50vh;"
         >
           <fieldset style="display: flex;flex-direction: column;align-content: center;justify-content: space-evenly;align-items: stretch;">
             <legend> Locations Tab</legend>
-            {#each $PLAYER_DISPATCH as Data}
+            {#each $PLAYER_DISPATCH.reverse() as Data}
               <fieldset class="shadow-1" on:click={(e) => ChangeLocation(Data)}>
                 <legend>
                   {Data.Message}
@@ -170,7 +200,6 @@
             {/each}
           </fieldset>
         </div>
-      {/if}
     </div>
   </div>
 {/if}

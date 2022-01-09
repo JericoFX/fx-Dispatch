@@ -1,6 +1,4 @@
 <script>
-
-  import {JOB_NAME} from '../store/store';
   import {createEventDispatcher} from 'svelte';
   import {fade} from 'svelte/transition'
   import { pop, push } from 'svelte-spa-router';
@@ -49,7 +47,7 @@
   }
 </script>
 {#if Close}
-  <div class="window glass absolute-center non-selectable" style="    margin: 32px;
+  <div class="window absolute-center non-selectable" style="    margin: 32px;
   max-width: 100vh;
   position: absolute;
   top: 479.5px;
@@ -68,20 +66,6 @@
             <fieldset>
               <img alt="" src="https://media.discordapp.net/attachments/863929033925197844/927733988116795452/manager.png?width=462&height=462" style="width:128px;margin-left:3px;" />
               <p style="text-align:center;">Manage App</p>
-            </fieldset>
-          </div>
-
-          <div class="img" on:click={e=> HandlePop("InformationScreen")}>
-            <fieldset>
-              <!-- <div>Iconos diseñados por <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.es/" title="Flaticon">www.flaticon.es</a></div> -->
-              <img alt="" src="https://media.discordapp.net/attachments/863929033925197844/927733987756093570/informacion.png?width=462&height=462" style="width:128px;margin-left:3px;" />
-              <p style="text-align:center;">Information</p>
-            </fieldset>
-          </div>
-          <div class="img" style="flex:auto;" on:click={e=>HandlePop('Activity')}>
-            <fieldset>
-              <img alt="" src="https://media.discordapp.net/attachments/863929033925197844/927733987433119754/activities.png?width=462&height=462" style="width:128px;margin-left:3px;" />
-              <p style="text-align:center;">Activity</p>
             </fieldset>
           </div>
           <div class="img" style="flex:auto;" on:click={e=>HandlePop('BossMenu')}>
@@ -104,13 +88,6 @@
     </div>
   </div>
 {/if}
-
-<!-- {#if Manage}
-  <Peoples Close={Manage} job={$JOB_NAME} on:closeModal={closeModal} />
-  {:else if Information}
-  <InformationScreen Close={Information} job={$JOB_NAME} on:closeModal={closeModal} />
- 
-{/if} -->
 
 <style>
   .img {

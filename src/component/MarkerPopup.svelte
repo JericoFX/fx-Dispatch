@@ -4,7 +4,8 @@
   const dispatch = createEventDispatcher();
   export const name = '';
   export let Description;
-$:console.log(Description);
+  export let Street = ""
+
 </script>
 
 <div class="window leaflet-popup-content-wrapper" style="max-width:100vh">
@@ -14,9 +15,10 @@ $:console.log(Description);
   <div class="window-body">
     <fieldset class="non-selectable">
       <legend>Report Info</legend>
-      {Description}
+      {Description} at {Street}
     </fieldset>
   </div>
+ 
 </div>
 
 <style>

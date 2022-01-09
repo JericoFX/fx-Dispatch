@@ -5,6 +5,7 @@ specifiers:
   '@rollup/plugin-node-resolve': ^11.0.0
   '@rollup/plugin-typescript': ^8.0.0
   '@tsconfig/svelte': ^2.0.0
+  '@zerodevx/svelte-toast': ^0.6.3
   leaflet: ^1.7.1
   rollup: ^2.3.4
   rollup-plugin-css-only: ^3.1.0
@@ -20,6 +21,7 @@ specifiers:
   typescript: ^4.0.0
 
 dependencies:
+  '@zerodevx/svelte-toast': 0.6.3
   leaflet: 1.7.1
   sirv-cli: 1.0.14
   svelte-spa-router: 3.2.0
@@ -185,6 +187,10 @@ packages:
     dependencies:
       '@types/node': 17.0.6
     dev: true
+
+  /@zerodevx/svelte-toast/0.6.3:
+    resolution: {integrity: sha512-k0W1JFoqHIcIQaP9ij99+Rv0ugaQSSNwOuNwwmTGRjWtIqrQr+ExLDE8LQGXLlJIprqDyMWB4lJkUql/r0RAtA==}
+    dev: false
 
   /ansi-styles/3.2.1:
     resolution: {integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==}

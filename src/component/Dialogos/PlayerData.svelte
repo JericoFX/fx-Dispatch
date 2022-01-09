@@ -1,17 +1,14 @@
 <script>
   import {createEventDispatcher} from 'svelte';
-  // import {useNuiEvent} from '../util/useNuiEvent';
-  // import {IS_DEV} from '../util/config';
-  // import {fetchNui} from '../util/fetchNui';
-  // import {JOB_NAME, JOB_MONEY, Tables_log, PLAYER_DATA} from '../store/store';
+
   export let open = false;
   const dispatch = createEventDispatcher();
   export let Detail = '';
   export let money = 0;
  
-  export let name = "String"
-  export let lastName="Str"
-  export let Date = "String"
+  export let name = ""
+  export let lastName=""
+  export let Date = ""
 
 
   function dragMe(node) {
@@ -59,7 +56,7 @@
     </div>
     <div class="window-body">
       <fieldset class="vertical-middle">
-        <p class="text-center">The Current {Detail} was made by {name+ " " + " " +lastName} by the amount of <span class="text-bold">${money}</span> on the date {Date}</p>
+        <p class="text-center">The Current {Detail} was made by {name} {lastName} by the amount of <span class="text-bold">${money}</span> on the date {Date}</p>
       </fieldset>
       <section class="field-row" style="justify-content: center">
         <button   on:click={closeModal}>Ok</button>
