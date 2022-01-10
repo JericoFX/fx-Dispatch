@@ -2,18 +2,20 @@
   import * as L from 'leaflet';
   import 'leaflet/dist/leaflet.css';
   import MarkerPopup from '../component/MarkerPopup.svelte';
+
   import {PLAYER_DISPATCH} from '../store/store';
   import {createEventDispatcher, onDestroy, onMount} from 'svelte';
-import { DEBUG } from '../util/config';
+  import {DEBUG} from '../util/config';
   export let open = false;
   export const Expanded = true;
+  export let newLat = 0;
+  export let newLong = 0;
+  export let UseData = false;
   const dispatch = createEventDispatcher();
   $: open;
   let Handle = [];
-  function closeModal() {
-    open = false;
-    dispatch('closeModal', {open});
-  }
+
+
   var gtaOffset = 0.66;
 
   const greenIcon = L.icon({
@@ -63,10 +65,22 @@ import { DEBUG } from '../util/config';
       bounds1 = L.latLngBounds(corner1, corner2);
     map.fitBounds(bounds1);
     map.setMaxBounds(bounds1);
+    if (UseData) {
+      map.flyTo(gtaToLatLng(newLat, newLong), 5);
+      setTimeout(() =>{
+        var circle = L.circle(gtaToLatLng(newLat, newLong), {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 50
+}).addTo(map);
+          map.addLayer(circle);
+      },1000)
+    }
     return map;
   }
 
-  async function  bindPopup(marker: { bindPopup: any; on: any; }, createFn: { (m: any): MarkerPopup; (m: any): MarkerPopup; (arg0: any): MarkerPopup|PromiseLike<MarkerPopup>; }) {
+  async function bindPopup(marker: {bindPopup: any; on: any}, createFn: {(m: any): MarkerPopup; (m: any): MarkerPopup; (arg0: any): MarkerPopup | PromiseLike<MarkerPopup>}) {
     let popupComponent: MarkerPopup;
     marker.bindPopup(async () => {
       let container = await L.DomUtil.create('div');
@@ -87,12 +101,12 @@ import { DEBUG } from '../util/config';
     });
   }
 
- function gtaToLatLng(x: number, y: number) {
+  function gtaToLatLng(x: number, y: number) {
     var lng = x * gtaOffset + mapCenterLng;
     var lat = y * gtaOffset + mapCenterLat;
-    return  L.latLng(lat, lng);
+    return L.latLng(lat, lng);
   }
-  let marker: { bindPopup: (arg0: () => any) => void; on: (arg0: string,arg1: () => void) => void; };
+  let marker: {bindPopup: (arg0: () => any) => void; on: (arg0: string, arg1: () => void) => void};
   let count = 0;
   let Markerid = [];
 
@@ -113,20 +127,8 @@ import { DEBUG } from '../util/config';
       return c;
     });
   }
-
- 
-function DeleteMarkers() {
-    for (const key in Markerid) {
-      if (Object.prototype.hasOwnProperty.call(Markerid, key)) {
-        if (map.hasLayer(Markerid[key])) {
-          map.removeLayer(Markerid[key]);
-          Markerid[key] = null
-        }
-      }
-    }
-  }
-
- function UpdateMarkers() {
+  
+  function UpdateMarkers() {
     for (const key in $PLAYER_DISPATCH) {
       if (Object.prototype.hasOwnProperty.call($PLAYER_DISPATCH, key)) {
         const element = $PLAYER_DISPATCH[key];
@@ -153,6 +155,15 @@ function DeleteMarkers() {
       }
     }
   }
+  function closeModal() {
+ 
+    open = false;
+    dispatch('closeModal', {open});
+
+  }
+
+
+
 </script>
 
 {#if open}
@@ -178,28 +189,28 @@ function DeleteMarkers() {
         <legend>Dispatch Map</legend>
         <div class="map" style="position: relative;width: 95vh;height: 91vh;" use:mapAction />
       </fieldset>
-        <div
-          class="absolute-right float-right"
-          style="    top: 34px;
+      <div
+        class="absolute-right float-right"
+        style="    top: 34px;
           right: 12px;
           bottom: 0px;
           overflow: scroll;
           height: 94vh;
           width: 40vh;
           max-width: 50vh;"
-        >
-          <fieldset style="display: flex;flex-direction: column;align-content: center;justify-content: space-evenly;align-items: stretch;">
-            <legend> Locations Tab</legend>
-            {#each $PLAYER_DISPATCH.reverse() as Data}
-              <fieldset class="shadow-1" on:click={(e) => ChangeLocation(Data)}>
-                <legend>
-                  {Data.Message}
-                </legend>
-                {Data.Name}
-              </fieldset>
-            {/each}
-          </fieldset>
-        </div>
+      >
+        <fieldset style="display: flex;flex-direction: column;align-content: center;justify-content: space-evenly;align-items: stretch;">
+          <legend> Locations Tab</legend>
+          {#each $PLAYER_DISPATCH.reverse() as Data}
+            <fieldset class="shadow-1" on:click={(e) => ChangeLocation(Data)}>
+              <legend>
+                {Data.Message}
+              </legend>
+              {Data.Name}
+            </fieldset>
+          {/each}
+        </fieldset>
+      </div>
     </div>
   </div>
 {/if}
