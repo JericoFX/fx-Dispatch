@@ -1,31 +1,39 @@
 <script lang="ts">
   import {pop, push} from 'svelte-spa-router';
-import { VEHICLE_DATA } from '../../store/store';
-import * as L from "leaflet"
-  import {DEBUG} from '../../util/config';
-  import {fetchNui} from '../../util/fetchNui';
-  import {useNuiEvent} from '../../util/useNuiEvent';
+  import {SvelteToast, toast} from '@zerodevx/svelte-toast';
+  import {VEHICLE_DATA} from '../../store/store';
+  import * as L from 'leaflet';
   import vehicleColor from '../../util/vehicle-colors';
-import VehicleInfo from './VehicleInfo.svelte';
-import Map from '../Map.svelte';
-import {createEventDispatcher} from "svelte"
-const dispatcher = createEventDispatcher();
+  import VehicleInfo from './VehicleInfo.svelte';
+  import Map from '../Map.svelte';
+  import {createEventDispatcher} from 'svelte';
+  import {fetchNui} from '../../util/fetchNui';
+  const dispatcher = createEventDispatcher();
+  const app = new SvelteToast({
+    // Set where the toast container should be appended into
+    target: document.body,
+    props: {},
+  });
+
   let Owner = '',
     Plate = '',
     Color = '',
     Name = '',
     Garage = '',
     Model = '';
-    
+
   let Fuel = 0,
     Engine = 0,
     State = 0,
     Body = 0;
-  let Requeried = false,open = false,OpenMap=false;
+  let Requeried = false,
+    open = false,
+    hasgps = false,
+    OpenMap = false;
   $: Plates = '';
 
   function UpdateData(Data) {
-    // let Data = $VEHICLE_DATA.filter((item) => item.plate === '25HMB316');
+
     let Parse = JSON.parse(Data.mods);
     Owner = Data.citizenid;
     Plate = Data.plate;
@@ -38,35 +46,64 @@ const dispatcher = createEventDispatcher();
     Engine = Parse.engineHealth.toFixed(1);
     Body = Parse.bodyHealth.toFixed(1);
     State = Data.state;
-    Name = "JericoFX"
+    Name = 'JericoFX';
+    hasgps = Data.hasgps
   }
 
   function GetPlate() {
-    // fetchNui('GetVehicleInfo', {Plates}).then((cb) => {
-    //   if (cb) {
-    //     if (DEBUG) {
-    //       console.log(cb);
-    //     }
-    //     UpdateData(cb);
-    //   }
-    // });
-    let Data = $VEHICLE_DATA.filter(item => item.plate === "25HMB316")
-    UpdateData(Data[0]);
+    fetchNui('GetVehicleData', {Plates}).then((cb) => {
+      if(cb){
+        UpdateData(cb)
+      }
+    })
   }
-  function OpenDataName(){
-    open = true
+  function OpenDataName(Message) {
+    let dom = document.getElementById('jerico');
+    let m = new VehicleInfo({
+      target: dom,
+      props: {
+        open: true,
+        message: Message,
+      },
+    });
+    return m;
   }
-  function OpenMaps(){
-    OpenMap = true
+  function OpenMaps() {
+    if(hasgps){
+      fetchNui('GetVehiclePosition', {Plate}).then((cb) => {
+      if (cb) {
+        let MapId = document.getElementById('map');
+        let m = new Map({
+          target: MapId,
+          props: {
+            open: true,
+            newLat: Number(cb.x),
+            newLong: Number(cb.y),
+            UseData: true,
+          },
+        });
+        return m;
+      }
+    });
+    }else{
+      toast.push(`The Selected vehicle doest have a GPS system installed`, {
+          theme: {
+            '--toastBackground': '#48BB78',
+            '--toastBarBackground': '#2F855A',
+          },
+        });
+      
+    }
+   
   }
-  function CloseMaps(e: { detail: { open: boolean; }; }){
-     OpenMap = e.detail.open
+  function CloseMaps(e: {detail: {open: boolean}}) {
+    OpenMap = e.detail.open;
   }
-  let newLat = -838.4307861328125
-    let newLong = -146.84835815429688
+  let newLat = -838.4307861328125;
+  let newLong = -146.84835815429688;
 
-  function CloseInfo(e: { detail: { open: boolean; }; }){
-   open = false
+  function CloseInfo(e: {detail: {open: boolean}}) {
+    open = false;
   }
 </script>
 
@@ -74,7 +111,7 @@ const dispatcher = createEventDispatcher();
   <div class="title-bar">
     <div class="title-bar-text">Vehicle App</div>
     <div class="title-bar-controls">
-      <button aria-label="Close" on:click="{e => push("/")}" />
+      <button aria-label="Close" on:click={(e) => push('/')} />
     </div>
   </div>
   <div class="window-body">
@@ -92,14 +129,15 @@ const dispatcher = createEventDispatcher();
         <div class="field-row fit ">
           <fieldset class="fit" style="justify-content: flex-start;">
             <legend>Information</legend>
-            <p class="ellipsis">Owner: <span class="text-bold" on:click={OpenDataName}>{Owner}</span></p>
+            <p class="ellipsis">Owner: <span class="text-bold">{Owner}</span></p>
             <p class="ellipsis">Plate: <span class="text-bold"> {Plate} </span></p>
-            <p class="ellipsis" on:click="{OpenMaps}">Model: <span class="text-bold"> {Model.toUpperCase()} </span></p>
+            <p class="ellipsis" on:click={OpenMaps}>Model: <span class="text-bold"> {Model.toUpperCase()} </span></p>
             <p class="ellipsis">Requeried: <span class="text-bold"><span style={Requeried ? `background-color:red` : 'green'}>{Requeried}</span> </span></p>
             <p>
-              State: {State === 2 ? "Impounded" : State === 1 ? "Garaged" : State === 0 ? "Out" : "Error"}
+              State: {State === 2 ? 'Impounded' : State === 1 ? 'Garaged' : State === 0 ? 'Out' : 'Error'}
             </p>
           </fieldset>
+
           <fieldset class="fit" style="justify-content: center;">
             <legend>Garage</legend>
             <p disabled class="ellipsis">
@@ -115,6 +153,10 @@ const dispatcher = createEventDispatcher();
             <p class="ellipsis">Color: <span style={true ? `background-color:${Color}` : 'black'}>{Color}</span></p>
           </fieldset>
         </div>
+        <span
+          ><button class={State === 2 ? '' : 'disabled'}>Release from Impound</button> <button>Locate Vehicle</button>
+          <button class={Plate === '' ? 'disabled' : ''} on:click={(e) => (Plate === '' ? OpenDataName(`No Data Loaded`) : OpenDataName(`The Vehicle with the Plate ${Plate} belongs to ${Name}`))}>Owner Information</button>
+        </span>
       </fieldset>
     </fieldset>
     <div class="status-bar">
@@ -124,5 +166,6 @@ const dispatcher = createEventDispatcher();
     </div>
   </div>
 </div>
-<VehicleInfo {open} Name={Name} Plate={Plate} on:closeModal={CloseInfo} ></VehicleInfo>
-<Map open={OpenMap} UseData="{true}" newLat={newLat} newLong={newLong} on:closeModal={CloseMaps}  ></Map>
+<div id="jerico" />
+<div id="map" />
+<!-- <Map open={OpenMap} UseData={true} {newLat} {newLong} on:closeModal={CloseMaps} /> -->

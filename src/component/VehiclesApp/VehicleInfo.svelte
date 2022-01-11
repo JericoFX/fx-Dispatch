@@ -3,30 +3,37 @@ import { createEventDispatcher } from "svelte";
 
 
   export let open = false
-  export let Name = ""
-  export let Plate = ""
+  export let message = ""
   const dispatch = createEventDispatcher();
 
   function closeModal() {
     open = false;
     dispatch('closeModal', {open});
   }
+
   
 </script>
-<div class="windows glass absolute-center" style="--display: {open ? 'block' : 'none'}; max-width: 100vh;">
-  <div class="window fixed-center" style="width:50vh;">
+<div class="windows absolute-center" style="--display: {open ? 'block' : 'none'};">
+  <div class="window" style="width:50vh;">
     <div class="title-bar">
       <div class="title-bar-text"><i class="fa-solid fa-triangle-exclamation" style="color:red;" /> Detail Windows!</div>
       <div class="title-bar-controls">
         <button aria-label="Close" />
       </div>
     </div>
+    <div id="jerico">
+      
+    </div>
     <div class="window-body">
       <fieldset class="vertical-middle">
-        <p class="text-center">The car with the plate {Plate} belongs to {Name} </p>
+        <legend>Vehicle Detail</legend>
+   
+        <p class="text-center text-subtitle1 ">{message}</p>
         <span>
-          <button class="on-right" style="margin-left: 94px;" on:click={closeModal}>Ok</button>
-        </span>
+          <button  style="    display: block;
+          margin-left: auto;
+          margin-right: auto;" on:click={closeModal}>Ok</button>
+        </span> 
       </fieldset>
     </div>
   </div>
