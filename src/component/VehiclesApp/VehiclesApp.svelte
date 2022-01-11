@@ -8,6 +8,7 @@
   import Map from '../Map.svelte';
   import {createEventDispatcher} from 'svelte';
   import {fetchNui} from '../../util/fetchNui';
+import { IS_DEV } from '../../util/config';
   const dispatcher = createEventDispatcher();
   const app = new SvelteToast({
     // Set where the toast container should be appended into
@@ -33,7 +34,6 @@
   $: Plates = '';
 
   function UpdateData(Data) {
-
     let Parse = JSON.parse(Data.mods);
     Owner = Data.citizenid;
     Plate = Data.plate;
@@ -47,15 +47,22 @@
     Body = Parse.bodyHealth.toFixed(1);
     State = Data.state;
     Name = 'JericoFX';
-    hasgps = Data.hasgps
+    hasgps = Data.hasgps;
   }
 
   function GetPlate() {
-    fetchNui('GetVehicleData', {Plates}).then((cb) => {
+    if(IS_DEV){
+      let Data = $VEHICLE_DATA.filter((item) => item.plate === '25HMB316');
+    UpdateData(Data[0]);
+    }else{
+  fetchNui('GetVehicleData', {Plates}).then((cb) => {
       if(cb){
         UpdateData(cb)
       }
     })
+    }
+  
+  
   }
   function OpenDataName(Message) {
     let dom = document.getElementById('jerico');
@@ -69,32 +76,30 @@
     return m;
   }
   function OpenMaps() {
-    if(hasgps){
+    if (hasgps) {
       fetchNui('GetVehiclePosition', {Plate}).then((cb) => {
-      if (cb) {
-        let MapId = document.getElementById('map');
-        let m = new Map({
-          target: MapId,
-          props: {
-            open: true,
-            newLat: Number(cb.x),
-            newLong: Number(cb.y),
-            UseData: true,
-          },
-        });
-        return m;
-      }
-    });
-    }else{
+        if (cb) {
+          let MapId = document.getElementById('map');
+          let m = new Map({
+            target: MapId,
+            props: {
+              open: true,
+              newLat: Number(cb.x),
+              newLong: Number(cb.y),
+              UseData: true,
+            },
+          });
+          return m;
+        }
+      });
+    } else {
       toast.push(`The Selected vehicle doest have a GPS system installed`, {
-          theme: {
-            '--toastBackground': '#48BB78',
-            '--toastBarBackground': '#2F855A',
-          },
-        });
-      
+        theme: {
+          '--toastBackground': '#48BB78',
+          '--toastBarBackground': '#2F855A',
+        },
+      });
     }
-   
   }
   function CloseMaps(e: {detail: {open: boolean}}) {
     OpenMap = e.detail.open;
@@ -147,7 +152,14 @@
           </fieldset>
           <fieldset class="fit" style="justify-content: flex-end;">
             <legend>Data</legend>
-            <p class="ellipsis">Engine : {Engine}</p>
+            <p class="ellipsis">
+              Engine : {Engine}
+              <span
+                ><div role="progressbar" class="animated">
+                  <div style={`width:${Engine / 10}%`} />
+                </div></span
+              >
+            </p>
             <p class="ellipsis" style="max-width:20vh;">Fuel: {Fuel}</p>
             <p class="ellipsis">Body: {Body}</p>
             <p class="ellipsis">Color: <span style={true ? `background-color:${Color}` : 'black'}>{Color}</span></p>

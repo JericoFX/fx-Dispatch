@@ -20,7 +20,7 @@
     shadowSize: [38, 35], // size of the shadow
     shadowAnchor: [4, 62], // the same for the shadow
   });
-  let map: { fitBounds: (arg0: any) => void; setMaxBounds: (arg0: any) => void; flyTo: (arg0: any,arg1: number,arg2: { animate: boolean; duration: number; }) => void; addLayer: (arg0: { bindPopup: (arg0: () => any) => void; on: (arg0: string,arg1: () => void) => void; }) => void; bindPopup: (arg0: string) => { (): any; new(): any; openPopup: { (): void; new(): any; }; }; removeLayer: (arg0: any) => void; };
+  let map: {fitBounds: (arg0: any) => void; setMaxBounds: (arg0: any) => void; flyTo: (arg0: any, arg1: number, arg2: {animate: boolean; duration: number}) => void; addLayer: (arg0: {bindPopup: (arg0: () => any) => void; on: (arg0: string, arg1: () => void) => void}) => void; bindPopup: (arg0: string) => {(): any; new (): any; openPopup: {(): void; new (): any}}; removeLayer: (arg0: any) => void};
 
   var mapMinZoom = 2;
   var mapMaxZoom = 7;
@@ -63,7 +63,7 @@
     map.setMaxBounds(bounds1);
 
     if (UseData) {
-      RemoveMarkers()
+      RemoveMarkers();
       map.flyTo(gtaToLatLng(newLat, newLong), 5);
       setTimeout(() => {
         var circle = L.circle(gtaToLatLng(newLat, newLong), {
@@ -73,10 +73,7 @@
           radius: 50,
         }).addTo(map);
         map.addLayer(circle);
-        var popup = L.popup()
-    .setLatLng(gtaToLatLng(newLat, newLong))
-    .setContent("The Vehicle must be in this location")
-    .openOn(map);
+        var popup = L.popup().setLatLng(gtaToLatLng(newLat, newLong)).setContent('The Vehicle must be in this location').openOn(map);
       }, 50);
     }
     return map;
@@ -130,46 +127,45 @@
     });
   }
 
-function RemoveMarkers(){
-  for (const key in Markerid) {
-    if (Object.prototype.hasOwnProperty.call(Markerid, key)) {
-      const element = Markerid[key];
-      map.removeLayer(element)
-    }
-  }
-}
-
-  function UpdateMarkers() {
-    if(!UseData){
-      for (const key in $PLAYER_DISPATCH) {
-      if (Object.prototype.hasOwnProperty.call($PLAYER_DISPATCH, key)) {
-        const element = $PLAYER_DISPATCH[key];
-        Markerid[element.Id] = 0;
-        if (!Markerid[element.Id]) {
-          Markerid[element.Id] = marker = L.marker(gtaToLatLng(element.Coords.x, element.Coords.y), {icon: greenIcon}).addTo(map);
-          map.addLayer(marker);
-        } else {
-          map.removeLayer(Markerid[element.Id]);
-          Markerid[element.Id] = marker = L.marker(gtaToLatLng(element.Coords.x, element.Coords.y), {icon: greenIcon}).addTo(map);
-          map.addLayer(marker);
-        }
-        bindPopup(marker, function (m: any) {
-          let c = new MarkerPopup({
-            target: m,
-            props: {
-              name: element.Name,
-              Description: element.Message,
-              Street: element.Street,
-            },
-          });
-          return c;
-        });
+  function RemoveMarkers() {
+    for (const key in Markerid) {
+      if (Object.prototype.hasOwnProperty.call(Markerid, key)) {
+        const element = Markerid[key];
+        map.removeLayer(element);
       }
     }
-    }else{
-      return
+  }
+
+  function UpdateMarkers() {
+    if (!UseData) {
+      for (const key in $PLAYER_DISPATCH) {
+        if (Object.prototype.hasOwnProperty.call($PLAYER_DISPATCH, key)) {
+          const element = $PLAYER_DISPATCH[key];
+          Markerid[element.Id] = 0;
+          if (!Markerid[element.Id]) {
+            Markerid[element.Id] = marker = L.marker(gtaToLatLng(element.Coords.x, element.Coords.y), {icon: greenIcon}).addTo(map);
+            map.addLayer(marker);
+          } else {
+            map.removeLayer(Markerid[element.Id]);
+            Markerid[element.Id] = marker = L.marker(gtaToLatLng(element.Coords.x, element.Coords.y), {icon: greenIcon}).addTo(map);
+            map.addLayer(marker);
+          }
+          bindPopup(marker, function (m: any) {
+            let c = new MarkerPopup({
+              target: m,
+              props: {
+                name: element.Name,
+                Description: element.Message,
+                Street: element.Street,
+              },
+            });
+            return c;
+          });
+        }
+      }
+    } else {
+      return;
     }
-    
   }
   function closeModal() {
     open = false;
@@ -198,35 +194,33 @@ function RemoveMarkers(){
       width: 557px;"
       >
         <legend>Dispatch Map</legend>
-        <div class="map" style={UseData ? " position: relative;width: 143vh;height: 91vh; outline: none;":"position: relative;width: 95vh;height: 91vh;"} use:mapAction />
+        <div class="map" style={UseData ? ' position: relative;width: 143vh;height: 91vh; outline: none;' : 'position: relative;width: 95vh;height: 91vh;'} use:mapAction />
       </fieldset>
       {#if UseData}
-        <div></div>
-
-        {:else}
-     
-      <div
-        class="absolute-right float-right"
-        style="    top: 34px;
+        <div />
+      {:else}
+        <div
+          class="absolute-right float-right"
+          style="    top: 34px;
           right: 12px;
           bottom: 0px;
           overflow: scroll;
           height: 94vh;
           width: 40vh;
           max-width: 50vh;"
-      >
-        <fieldset style="display: flex;flex-direction: column;align-content: center;justify-content: space-evenly;align-items: stretch;">
-          <legend> Locations Tab</legend>
-          {#each $PLAYER_DISPATCH.reverse() as Data}
-            <fieldset class="shadow-1" on:click={(e) => ChangeLocation(Data)}>
-              <legend>
-                {Data.Message}
-              </legend>
-              {Data.Name}
-            </fieldset>
-          {/each}
-        </fieldset>
-      </div>
+        >
+          <fieldset style="display: flex;flex-direction: column;align-content: center;justify-content: space-evenly;align-items: stretch;">
+            <legend> Locations Tab</legend>
+            {#each $PLAYER_DISPATCH.reverse() as Data}
+              <fieldset class="shadow-1" on:click={(e) => ChangeLocation(Data)}>
+                <legend>
+                  {Data.Message}
+                </legend>
+                {Data.Name}
+              </fieldset>
+            {/each}
+          </fieldset>
+        </div>
       {/if}
     </div>
   </div>
