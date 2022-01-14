@@ -1,6 +1,6 @@
 <script>
   import {createEventDispatcher} from 'svelte';
-
+  import { draggable } from 'svelte-drag';
   export let open = false;
   const dispatch = createEventDispatcher();
   export let Detail = '';
@@ -11,33 +11,7 @@
   export let Date = ""
 
 
-  function dragMe(node) {
-    let moving = false;
-    let left = 600;
-    let top = 200;
 
-    node.style.position = 'absolute';
-    node.style.top = `${top}px`;
-    node.style.left = `${left}px`;
-    node.style.userSelect = 'none';
-
-    node.addEventListener('mousedown', () => {
-      moving = true;
-    });
-
-    window.addEventListener('mousemove', (e) => {
-      if (moving) {
-        left += e.movementX;
-        top += e.movementY;
-        node.style.top = `${top}px`;
-        node.style.left = `${left}px`;
-      }
-    });
-
-    window.addEventListener('mouseup', () => {
-      moving = false;
-    });
-  }
  
   function closeModal() {
     open = false;
@@ -46,7 +20,7 @@
 
 </script>
 
-<div class="windows glass absolute-center" use:dragMe style="--display: {open ? 'block' : 'none'}; max-width: 100vh">
+<div class="windows glass absolute-center" use:draggable style="--display: {open ? 'block' : 'none'}; max-width: 100vh">
   <div class="window " style="max-width:100vh;">
     <div class="title-bar">
       <div class="title-bar-text"><i class="fa-solid fa-triangle-exclamation" style="color:red;" /> {Detail} Windows!</div>

@@ -3,6 +3,7 @@
   import SelectedAppPersonas from './component/SelectedAppPersonas.svelte';
   import Router from 'svelte-spa-router';
   import VehicleApp from './component/VehiclesApp/VehiclesApp.svelte';
+  import Warrant from './component/WarrantApp/Warrant_index.svelte';
   import {JOB_NAME, IS_VISIBLE, JOB_PLAYERS, PLAYER_DATA, PLAYER_DISPATCH, JOB_MONEY, JOB_RANKS} from './store/store';
   import routes from './util/router';
   import {useNuiEvent} from './util/useNuiEvent';
@@ -58,10 +59,10 @@
       component: VehicleApp,
     },
     {
-      name: 'Warrants',
+      name: 'Warrant',
       img: 'https://img.icons8.com/fluency/48/000000/ipad.png',
       selected: false,
-      component: SelectedAppPersonas,
+      component: Warrant,
     },
   ];
 

@@ -2,7 +2,7 @@
   import {createEventDispatcher} from 'svelte';
   import {fade} from 'svelte/transition'
   import { pop, push } from 'svelte-spa-router';
-
+  import { draggable } from 'svelte-drag';
   const dispatch = createEventDispatcher();
   export let Close = true;
   let Manage = false;
@@ -15,33 +15,7 @@
     Activity = false;
     dispatch('closeModal', {Close});
   }
-  function dragMe(node) {
-    let moving = false;
-    let left = window.innerWidth / 2 ;
-    let top = window.innerHeight / 2;
-
-    node.style.position = 'absolute';
-    node.style.top = `${top}px`;
-    node.style.left = `${left}px`;
-    node.style.userSelect = 'none';
-
-    node.addEventListener('mousedown', () => {
-      moving = true;
-    });
-
-    window.addEventListener('mousemove', (e) => {
-      if (moving) {
-        left += e.movementX;
-        top += e.movementY;
-        node.style.top = `${top}px`;
-        node.style.left = `${left}px`;
-      }
-    });
-
-    window.addEventListener('mouseup', () => {
-      moving = false;
-    });
-  }
+  
   function HandlePop(id){
     push(`/${id}`)
   }
@@ -52,7 +26,7 @@
   position: absolute;
   top: 479.5px;
   left: 834.5px;
-  user-select: none;" use:dragMe in:fade="{{duration: 100}}">
+  user-select: none;" use:draggable in:fade="{{duration: 100}}">
     <div class="title-bar">
       <div class="title-bar-text">Select the App</div>
       <div class="title-bar-controls">

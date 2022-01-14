@@ -4,6 +4,8 @@ import BossMenu from '../component/BossMenu.svelte';
 import SelectedAppPersonas from '../component/SelectedAppPersonas.svelte';
 import Map1 from '../component/Map.svelte';
 import VehicleApp from '../component/VehiclesApp/VehiclesApp.svelte';
+import Warrant from '../component/WarrantApp/Warrant_index.svelte';
+
 import {wrap} from 'svelte-spa-router/wrap'
 import {JOB_NAME,IS_VISIBLE, JOB_PLAYERS} from "../store/store"
 export default  {
@@ -27,5 +29,8 @@ export default  {
   }),
   "/Vehicles":wrap({
     component:VehicleApp,
+  }),
+  "/Warrant":wrap({
+    component:Warrant,
   })
 }

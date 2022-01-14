@@ -8,7 +8,7 @@
   import Map from '../Map.svelte';
   import {createEventDispatcher} from 'svelte';
   import {fetchNui} from '../../util/fetchNui';
-import { IS_DEV } from '../../util/config';
+  import {IS_DEV} from '../../util/config';
   const dispatcher = createEventDispatcher();
   const app = new SvelteToast({
     // Set where the toast container should be appended into
@@ -26,14 +26,18 @@ import { IS_DEV } from '../../util/config';
   let Fuel = 0,
     Engine = 0,
     State = 0,
+    hasgps = 0,
     Body = 0;
+
   let Requeried = false,
     open = false,
-    hasgps = false,
+   
     OpenMap = false;
   $: Plates = '';
 
-  function UpdateData(Data) {
+  function UpdateData(Data: { id?: number; license?: string; citizenid: string; vehicle: string; hash?: string; mods: any; plate: string; fakeplate?: any; garage: string; fuel?: number; engine?: number; body?: number; state: any; depotprice?: number; drivingdistance?: number; status?: any; notes?: string; pics?: string; damages?: string; hasgps: number; requeried?: any; }) {
+    console.log(Data);
+    
     let Parse = JSON.parse(Data.mods);
     Owner = Data.citizenid;
     Plate = Data.plate;
@@ -51,20 +55,20 @@ import { IS_DEV } from '../../util/config';
   }
 
   function GetPlate() {
-    if(IS_DEV){
+    if (IS_DEV) {
+      console.log(IS_DEV);
+      
       let Data = $VEHICLE_DATA.filter((item) => item.plate === '25HMB316');
-    UpdateData(Data[0]);
-    }else{
-  fetchNui('GetVehicleData', {Plates}).then((cb) => {
-      if(cb){
-        UpdateData(cb)
-      }
-    })
+      UpdateData(Data[0]);
+    } else {
+      fetchNui('GetVehicleData', {Plates}).then((cb) => {
+        if (cb) {
+          UpdateData(cb);
+        }
+      });
     }
-  
-  
   }
-  function OpenDataName(Message) {
+  function OpenDataName(Message: string) {
     let dom = document.getElementById('jerico');
     let m = new VehicleInfo({
       target: dom,
@@ -75,9 +79,12 @@ import { IS_DEV } from '../../util/config';
     });
     return m;
   }
+  let newLat = -838.4307861328125;
+  let newLong = -146.84835815429688;
   function OpenMaps() {
     if (hasgps) {
-      fetchNui('GetVehiclePosition', {Plate}).then((cb) => {
+      if(!IS_DEV){
+        fetchNui('GetVehiclePosition', {Plate}).then((cb) => {
         if (cb) {
           let MapId = document.getElementById('map');
           let m = new Map({
@@ -92,6 +99,20 @@ import { IS_DEV } from '../../util/config';
           return m;
         }
       });
+      }else{
+        let MapId = document.getElementById('map');
+          let m = new Map({
+            target: MapId,
+            props: {
+              open: true,
+              newLat: Number(newLat),
+              newLong: Number(newLong),
+              UseData: true,
+            },
+          });
+          return m;
+      }
+      
     } else {
       toast.push(`The Selected vehicle doest have a GPS system installed`, {
         theme: {
@@ -104,8 +125,7 @@ import { IS_DEV } from '../../util/config';
   function CloseMaps(e: {detail: {open: boolean}}) {
     OpenMap = e.detail.open;
   }
-  let newLat = -838.4307861328125;
-  let newLong = -146.84835815429688;
+
 
   function CloseInfo(e: {detail: {open: boolean}}) {
     open = false;
@@ -136,7 +156,7 @@ import { IS_DEV } from '../../util/config';
             <legend>Information</legend>
             <p class="ellipsis">Owner: <span class="text-bold">{Owner}</span></p>
             <p class="ellipsis">Plate: <span class="text-bold"> {Plate} </span></p>
-            <p class="ellipsis" on:click={OpenMaps}>Model: <span class="text-bold"> {Model.toUpperCase()} </span></p>
+            <p class="ellipsis">Model: <span class="text-bold"> {Model.toUpperCase()} </span></p>
             <p class="ellipsis">Requeried: <span class="text-bold"><span style={Requeried ? `background-color:red` : 'green'}>{Requeried}</span> </span></p>
             <p>
               State: {State === 2 ? 'Impounded' : State === 1 ? 'Garaged' : State === 0 ? 'Out' : 'Error'}
@@ -153,21 +173,33 @@ import { IS_DEV } from '../../util/config';
           <fieldset class="fit" style="justify-content: flex-end;">
             <legend>Data</legend>
             <p class="ellipsis">
-              Engine : {Engine}
+              Engine :
               <span
                 ><div role="progressbar" class="animated">
                   <div style={`width:${Engine / 10}%`} />
                 </div></span
               >
             </p>
-            <p class="ellipsis" style="max-width:20vh;">Fuel: {Fuel}</p>
-            <p class="ellipsis">Body: {Body}</p>
-            <p class="ellipsis">Color: <span style={true ? `background-color:${Color}` : 'black'}>{Color}</span></p>
+            <p class="ellipsis">
+              Fuel: <span
+                ><div role="progressbar" class="animated">
+                  <div style={`width:${Fuel}%`} />
+                </div></span
+              >
+            </p>
+            <p class="ellipsis">
+              Body: <span
+                ><div role="progressbar" class="animated">
+                  <div style={`width:${Body / 10}%`} />
+                </div></span
+              >
+            </p>
+            <p class="ellipsis">Color: <span style="{true ? `background-color:${Color}` : 'black'};width:3vh; ">{Color}</span></p>
           </fieldset>
         </div>
         <span
-          ><button class={State === 2 ? '' : 'disabled'}>Release from Impound</button> <button>Locate Vehicle</button>
-          <button class={Plate === '' ? 'disabled' : ''} on:click={(e) => (Plate === '' ? OpenDataName(`No Data Loaded`) : OpenDataName(`The Vehicle with the Plate ${Plate} belongs to ${Name}`))}>Owner Information</button>
+          ><button disabled="{State != 2}" class={State === 2 ? '' : 'disabled'}>Release from Impound</button> <button disabled="{Plate === ''}" on:click={OpenMaps}>Locate Vehicle</button>
+          <button disabled="{Plate === ''}" on:click={(e) => (Plate === '' ? OpenDataName(`No Data Loaded`) : OpenDataName(`The Vehicle with the Plate ${Plate} belongs to ${Name}`))}>Owner Information</button>
         </span>
       </fieldset>
     </fieldset>

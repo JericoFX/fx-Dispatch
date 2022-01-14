@@ -20,7 +20,7 @@
     shadowSize: [38, 35], // size of the shadow
     shadowAnchor: [4, 62], // the same for the shadow
   });
-  let map: {fitBounds: (arg0: any) => void; setMaxBounds: (arg0: any) => void; flyTo: (arg0: any, arg1: number, arg2: {animate: boolean; duration: number}) => void; addLayer: (arg0: {bindPopup: (arg0: () => any) => void; on: (arg0: string, arg1: () => void) => void}) => void; bindPopup: (arg0: string) => {(): any; new (): any; openPopup: {(): void; new (): any}}; removeLayer: (arg0: any) => void};
+  let map: {fitBounds: (arg0: any) => void; setMaxBounds: (arg0: any) => void; flyTo: (arg0: any, arg1: number, arg2: {animate: boolean; duration: number}) => void; addLayer: (arg0: {bindPopup: (arg0: () => any) => void; on: (arg0: string, arg1: () => void) => void}) => void; removeLayer: (arg0: any) => void};
 
   var mapMinZoom = 2;
   var mapMaxZoom = 7;
@@ -171,11 +171,16 @@
     open = false;
     dispatch('closeModal', {open});
   }
+
+  async function DeleteRow(id: string) {
+    $PLAYER_DISPATCH = await $PLAYER_DISPATCH.filter((item) => item.Id !== id);
+    map.removeLayer(Markerid[id]);
+  }
 </script>
 
 {#if open}
   <div
-    class="window fixed-center fit"
+    class="window fixed-center fit non-selectable"
     style="width: 135vh;
   max-width: 150vh;
   height: 100vh;"
@@ -211,12 +216,15 @@
         >
           <fieldset style="display: flex;flex-direction: column;align-content: center;justify-content: space-evenly;align-items: stretch;">
             <legend> Locations Tab</legend>
-            {#each $PLAYER_DISPATCH.reverse() as Data}
-              <fieldset class="shadow-1" on:click={(e) => ChangeLocation(Data)}>
+            {#each $PLAYER_DISPATCH as Data}
+              <fieldset class="shadow-1 q-mt-sm">
                 <legend>
-                  {Data.Message}
+                  {Data.Name}
                 </legend>
-                {Data.Name}
+                {Data.Message}
+                <p class="q-mt-sm">
+                  <span><button class="float-left" on:click={(e) => DeleteRow(Data.Id)}>Remove</button> <button on:click={() => ChangeLocation(Data)} class="text-center">Locate</button> <button class="float-right">Assign</button> </span>
+                </p>
               </fieldset>
             {/each}
           </fieldset>
