@@ -21,8 +21,6 @@ import { PLAYER_DISPATCH } from '../../store/store';
     },
   };
 
-  //add it via the columns property:
-
   let columns = ['Citizenid', 'Name', 'Message', actionBtn];
 
   function handleClick(e: { _cells: { data: any; }[]; }) {
