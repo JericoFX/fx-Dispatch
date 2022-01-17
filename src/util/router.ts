@@ -29,6 +29,9 @@ export default  {
   }),
   "/Vehicles":wrap({
     component:VehicleApp,
+    props:{
+      Open :true
+    }
   }),
   "/Warrant":wrap({
     component:Warrant,

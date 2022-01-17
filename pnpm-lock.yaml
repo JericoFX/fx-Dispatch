@@ -20,6 +20,7 @@ specifiers:
   svelte-drag: ^2.4.0
   svelte-preprocess: ^4.0.0
   svelte-spa-router: ^3.2.0
+  svelte-tags-input: ^2.8.1
   tslib: ^2.0.0
   typescript: ^4.0.0
 
@@ -31,6 +32,7 @@ dependencies:
   sirv-cli: 1.0.14
   svelte-drag: 2.4.0
   svelte-spa-router: 3.2.0
+  svelte-tags-input: 2.8.1
 
 devDependencies:
   '@rollup/plugin-commonjs': 17.1.0_rollup@2.62.0
@@ -196,6 +198,12 @@ packages:
 
   /@zerodevx/svelte-toast/0.6.3:
     resolution: {integrity: sha512-k0W1JFoqHIcIQaP9ij99+Rv0ugaQSSNwOuNwwmTGRjWtIqrQr+ExLDE8LQGXLlJIprqDyMWB4lJkUql/r0RAtA==}
+    dev: false
+
+  /acorn/8.7.0:
+    resolution: {integrity: sha512-V/LGr1APy+PXIwKebEWrkZPwoeoF+w1jiOBUmuxuiUIaOHtob8Qc9BTrYo7VuI5fR8tqsy+buA2WFooR5olqvQ==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
     dev: false
 
   /ansi-styles/3.2.1:
@@ -972,6 +980,12 @@ packages:
     resolution: {integrity: sha512-igemo5Vs82TGBBw+DjWt6qKameXYzNs6aDXcTxou5XbEvOjiRcAM6MLkdVRCatn6u8r42dE99bt/br7T4qe/AQ==}
     dependencies:
       regexparam: 2.0.0
+    dev: false
+
+  /svelte-tags-input/2.8.1:
+    resolution: {integrity: sha512-hbF9t1Nj83fsbF1G3tACjNThKwv4b3W8rxsSDh5DaFtvWdXLXy3i7+QbYKTXP+AXG+j9wvjxRBAvKOPIEfhGWg==}
+    dependencies:
+      acorn: 8.7.0
     dev: false
 
   /svelte/3.46.1:

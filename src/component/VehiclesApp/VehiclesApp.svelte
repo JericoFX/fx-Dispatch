@@ -1,23 +1,30 @@
 <script lang="ts">
-  import {pop, push} from 'svelte-spa-router';
+  import { push} from 'svelte-spa-router';
   import {SvelteToast, toast} from '@zerodevx/svelte-toast';
   import {VEHICLE_DATA} from '../../store/store';
-  import * as L from 'leaflet';
   import vehicleColor from '../../util/vehicle-colors';
   import VehicleInfo from './VehicleInfo.svelte';
   import Map from '../Map.svelte';
-  import {createEventDispatcher} from 'svelte';
+
   import {fetchNui} from '../../util/fetchNui';
   import {IS_DEV} from '../../util/config';
-  const dispatcher = createEventDispatcher();
+import { createEventDispatcher } from 'svelte';
   const app = new SvelteToast({
-    // Set where the toast container should be appended into
     target: document.body,
     props: {},
   });
+  const Dispatch =   createEventDispatcher()
+export let Placa = ""
 
+function CloseModal(){
+  Open = false
+  Dispatch("CloseModal",{open})
+}
+
+
+export let Open = false
   let Owner = '',
-    Plate = '',
+    Plate = Placa || "",
     Color = '',
     Name = '',
     Garage = '',
@@ -36,7 +43,6 @@
   $: Plates = '';
 
   function UpdateData(Data: { id?: number; license?: string; citizenid: string; vehicle: string; hash?: string; mods: any; plate: string; fakeplate?: any; garage: string; fuel?: number; engine?: number; body?: number; state: any; depotprice?: number; drivingdistance?: number; status?: any; notes?: string; pics?: string; damages?: string; hasgps: number; requeried?: any; }) {
-    console.log(Data);
     
     let Parse = JSON.parse(Data.mods);
     Owner = Data.citizenid;
@@ -56,10 +62,14 @@
 
   function GetPlate() {
     if (IS_DEV) {
-      console.log(IS_DEV);
-      
-      let Data = $VEHICLE_DATA.filter((item) => item.plate === '25HMB316');
+      if(Placa === ""){
+        let Data = $VEHICLE_DATA.filter((item) => item.plate === '25HMB316');
       UpdateData(Data[0]);
+      }else{
+        let Data = $VEHICLE_DATA.filter((item) => item.plate === Placa);
+       UpdateData(Data[0]);
+      }
+   
     } else {
       fetchNui('GetVehicleData', {Plates}).then((cb) => {
         if (cb) {
@@ -122,21 +132,13 @@
       });
     }
   }
-  function CloseMaps(e: {detail: {open: boolean}}) {
-    OpenMap = e.detail.open;
-  }
-
-
-  function CloseInfo(e: {detail: {open: boolean}}) {
-    open = false;
-  }
 </script>
-
+{#if Open}
 <div class="window absolute-center  non-selectable" style="width: 90vh;max-width:100vh;">
   <div class="title-bar">
     <div class="title-bar-text">Vehicle App</div>
     <div class="title-bar-controls">
-      <button aria-label="Close" on:click={(e) => push('/')} />
+      <button aria-label="Close" on:click={CloseModal} />
     </div>
   </div>
   <div class="window-body">
@@ -145,7 +147,7 @@
       <fieldset>
         <legend>Search</legend>
         <span class="on-right">
-          <input type="text" bind:value={Plates} placeholder="Input Plate" aria-describedby="balloon-password" />
+          <input type="text" bind:value={Plates} disabled={Placa ==="" ? false : true} placeholder={Placa ==="" ? "Input Plate" : Placa} aria-describedby="balloon-password" />
           <button on:click={GetPlate}>Search</button>
         </span>
       </fieldset>
@@ -212,4 +214,5 @@
 </div>
 <div id="jerico" />
 <div id="map" />
+{/if}
 <!-- <Map open={OpenMap} UseData={true} {newLat} {newLong} on:closeModal={CloseMaps} /> -->

@@ -25,6 +25,4 @@ let Close = true
   </div>
 </div>
 {/if}
-<style>
-	@import url("https://unpkg.com/7.css");
-</style>
+

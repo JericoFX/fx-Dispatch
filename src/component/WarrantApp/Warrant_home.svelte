@@ -1,14 +1,15 @@
 <script lang="ts">
-  import {JOB_NAME, JOB_PLAYERS, JOB_RANKS, PLAYER_DATA,PLAYER_DISPATCH} from '../../store/store';
+  import {JOB_NAME, JOB_PLAYERS, JOB_RANKS, PLAYER_DATA, PLAYER_DISPATCH, PLAYER_WARRANTS} from '../../store/store';
 
   const Name = JSON.parse($PLAYER_DATA[0].charinfo);
   $: Players = $JOB_PLAYERS.filter((item) => item.grade.onduty);
   $: Online = $JOB_PLAYERS.filter((item) => item.isOnline);
-  $: Warrants = $PLAYER_DISPATCH.length;
+  $: Warrants = $PLAYER_WARRANTS.length;
+
+
 </script>
 
-<div
-  class="window-body">
+<div class="window-body">
   <h2 class="text-center">{$JOB_NAME}</h2>
   <div>
     <fieldset style="height:50%;">
@@ -35,9 +36,8 @@
             {Warrants}
           </p>
         </fieldset>
-
       </div>
-      
     </fieldset>
   </div>
 </div>
+

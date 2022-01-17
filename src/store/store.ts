@@ -116,7 +116,7 @@ export const VEHICLE_DATA = writable(
         "notes": "asd",
         "pics": "\"\"",
         "damages": "{\"vehicle_doors\":[false,false,false,false,false,false],\"wheel_tires\":[false,false,false,false,false,false,false],\"vehicle_window\":[false,1,false,false,false,false,false,false]}",
-        "hasgps": 0
+        "hasgps": 1
       },
       {
         "id": 6,
@@ -138,7 +138,7 @@ export const VEHICLE_DATA = writable(
         "notes": "",
         "pics": "\"\\\"https://media.discordapp.net/attachments/290320746712924161/889303816846069790/screenshot.jpg\\\"\"",
         "damages": "{\"vehicle_doors\":[false,false,false,false,false,false],\"wheel_tires\":[false,false,false,false,false,false,false],\"vehicle_window\":[false,1,false,false,false,false,false,false]}",
-        "hasgps": 0
+        "hasgps": 1
       },
       {
         "id": 7,
@@ -297,3 +297,47 @@ export const VEHICLE_DATA = writable(
     ]
     : []
 );
+export const PLAYER_WARRANTS = writable([{
+  id: 203,
+  "Title": "sdasdaasdsda",
+  "Name": "asdasdasd",
+  "LastName": "dasdada",
+  "Location": "weewq",
+  "Description": "as dsaewqd asd ",
+  "Tags": [
+      "#1231"
+  ]
+},
+{
+  id: 204,
+  "Title": "sdasdaasdsda",
+  "Name": "asdasdasd",
+  "LastName": "dasdada",
+  "Location": "weewq",
+  "Description": "as dsaewqd asd ",
+  "Tags": [
+      "#1231"
+  ]
+},
+{
+  id: 205,
+  "Title": "sdasdaasdsda",
+  "Name": "asdasdasd",
+  "LastName": "dasdada",
+  "Location": "weewq",
+  "Description": "as dsaewqd asd ",
+  "Tags": [
+      "#1231"
+  ]
+},
+{
+  id: 206,
+  "Title": "sdasdaasdsda",
+  "Name": "asdasdasd",
+  "LastName": "dasdada",
+  "Location": "weewq",
+  "Description": "as dsaewqd asd ",
+  "Tags": [
+      "#1231"
+  ]
+}])
