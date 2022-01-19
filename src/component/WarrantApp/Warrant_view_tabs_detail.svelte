@@ -12,6 +12,7 @@
     dispatch('closeTab', {open});
   };
   $: Data = $PLAYER_WARRANTS.filter((w) => w.id === id);
+  
   function deleteRow() {
     Data = $PLAYER_WARRANTS.filter((w) => w.id !== id);
     $PLAYER_WARRANTS = Data;

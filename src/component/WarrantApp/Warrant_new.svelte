@@ -82,17 +82,10 @@
             <input disabled={!Vehicle} class="fit" id="Name" type="text" />
           </p>
         </fieldset>
-        <fieldset class="fit">
-          <legend>Location</legend>
-          <div>
-            <input  class="fit" bind:value={Location} id="text211" type="text" />
-            <button class="q-mt-md">Get current Location</button>
-          </div>
-        </fieldset>
+        
         <fieldset class="text-center fit">
           <legend>Description</legend>
           <div class="field-row-stacked">
-            <!-- <label class="text-h6 text-center" style="margin:auto;" for="text24">Description</label> -->
             <textarea class="fit" bind:value={Description} id="text24" rows="8" />
           </div>
         </fieldset>
