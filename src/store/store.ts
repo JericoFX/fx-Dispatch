@@ -12,7 +12,7 @@ export const JOB_PLAYERS = writable([
     isOnline:false
   },{
     source:"LTX65094",
-    grade:{"payment":30,"grade":{"level":0,"name":"No Grades"},"label":"Law Enforcement","isboss":false,"onduty":true,"name":"police"},
+    grade:{"payment":30,"grade":{"level":0,"name":"Boss"},"label":"Law Enforcement","isboss":false,"onduty":true,"name":"police"},
     isboss:false,
     name:"Kelly Santurio",
     phone:"321",
@@ -299,45 +299,50 @@ export const VEHICLE_DATA = writable(
 );
 export const PLAYER_WARRANTS = writable([{
   id: 203,
-  "Title": "sdasdaasdsda",
-  "Name": "asdasdasd",
-  "LastName": "dasdada",
-  "Location": "weewq",
-  "Description": "as dsaewqd asd ",
-  "Tags": [
+  Title: "sdasdaasdsda",
+  Name: "asdasdasd",
+  LastName: "dasdada",
+  Location: "weewq",
+  Description: "as dsaewqd asd ",
+  Vehicle:"None",
+  Tags: [
       "#1231"
   ]
 },
 {
   id: 204,
-  "Title": "sdasdaasdsda",
-  "Name": "asdasdasd",
-  "LastName": "dasdada",
-  "Location": "weewq",
-  "Description": "as dsaewqd asd ",
-  "Tags": [
+  Title: "sdasdaasdsda",
+  Name: "asdasdasd",
+  LastName: "dasdada",
+  Location: "weewq",
+  Description: "as dsaewqd asd ",
+  Vehicle:"None",
+  Tags: [
       "#1231"
   ]
 },
 {
   id: 205,
-  "Title": "sdasdaasdsda",
-  "Name": "asdasdasd",
-  "LastName": "dasdada",
-  "Location": "weewq",
-  "Description": "as dsaewqd asd ",
-  "Tags": [
+  Title: "sdasdaasdsda",
+  Name: "asdasdasd",
+  LastName: "dasdada",
+  Location: "weewq",
+  Description: "as dsaewqd asd ",
+  Vehicle:"None",
+  Tags: [
       "#1231"
   ]
 },
 {
   id: 206,
-  "Title": "sdasdaasdsda",
-  "Name": "asdasdasd",
-  "LastName": "dasdada",
-  "Location": "weewq",
-  "Description": "as dsaewqd asd ",
-  "Tags": [
+  Title: "sdasdaasdsda",
+  Name: "asdasdasd",
+  LastName: "dasdada",
+  Location: "weewq",
+  Description: "as dsaewqd asd ",
+  Vehicle:"None",
+  Tags: [
       "#1231"
   ]
 }])
+export const PLAYERS_JOBS = writable([{Name:"Jerico FX",Citizenid:"LTX65094"},{Name:"Kelly Santurio",Citizenid:"FQI55932"}])

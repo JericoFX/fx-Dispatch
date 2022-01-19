@@ -19,7 +19,7 @@
       );
     },
   };
- let columns = ['ID', 'Title', 'Name', 'Last Name', 'Location', 'Vehicle', 'Description', 'Evidencias', actionBtn];
+ let columns = ['ID', 'Title', 'Name', 'Last Name', 'Location', 'Vehicle', 'Description', , actionBtn];
  let data = [];
 
 
@@ -53,23 +53,28 @@
       }
     })
     m.$on("closeTab",(id) => closeTab())
+
+    return m
   }
 
   function handleClick(e: { _cells: { data: any; }[]; }, b: any) {
-    // idCell = e._cells[0].data;
     openTab(e._cells[0].data)
+    console.log(JSON.stringify($PLAYER_WARRANTS.includes(e._cells[0].data)))
+    
+  //   setTimeout(() =>{$PLAYER_WARRANTS[e._cells[0].data].Location = "FUNCIONARA?"
+  //   $PLAYER_WARRANTS = $PLAYER_WARRANTS
+  
+  // },2000)
   }
 
   function myJoin(array: any[], separator = ' | ') {
     return array.reduce((s, x, i) => s + (i > 0 ? separator : '') + (x == null ? '' : x), '');
   }
-$: if($PLAYER_WARRANTS.length){
-  GetData()
-}
-  const GetData = (_e: HTMLDivElement) => {
+
+  const GetData = () => {
     for (let index = 0; index < $PLAYER_WARRANTS.length; index++) {
       const element = $PLAYER_WARRANTS[index];
-      data.push([element.id, element.Title, element.Name, element.LastName, element.Location, element.Vehicle || 'None', element.Description, myJoin(element.Tags)]);
+      data.push([element.id, element.Title, element.Name, element.LastName, element.Location, element.Vehicle || 'None', element.Description]);
     }
   };
 

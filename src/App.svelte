@@ -9,6 +9,7 @@
   import {useNuiEvent} from './util/useNuiEvent';
   import {fetchNui} from './util/fetchNui';
   import {DEBUG} from './util/config';
+
   useNuiEvent('GetDefaultConfig', ({job_name, visible, job_money, players_jobs, player, ranks}) => {
     $JOB_NAME = job_name;
     $IS_VISIBLE = visible || false;

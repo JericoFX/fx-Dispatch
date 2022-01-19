@@ -1,7 +1,6 @@
 <script lang="ts">
   import {createEventDispatcher} from 'svelte';
   const dispatch = createEventDispatcher();
-  import Tags from 'svelte-tags-input';
   import {PLAYER_WARRANTS} from '../../store/store';
   let Title = '';
   let Location = '';
@@ -15,7 +14,7 @@
   const CreateNewDispatch = () => {
     let Data = Math.random() * 500
     //.toFixed(0)
-    $PLAYER_WARRANTS.push({id:Data.toFixed(0),Title: Title,Name:Name,LastName:lastName, Location: Location, Description: Description, Tags: Tags1});
+    $PLAYER_WARRANTS.push({id:Data.toFixed(0),CreatedBy:"",Screenshot:"",Title: Title,Name:Name,LastName:lastName, Location: Location, Description: Description});
     
       $PLAYER_WARRANTS = $PLAYER_WARRANTS;
     open = false;
@@ -97,13 +96,7 @@
             <textarea class="fit" bind:value={Description} id="text24" rows="8" />
           </div>
         </fieldset>
-        <fieldset>
-          <legend>Evidencia</legend>
-          <div class="hide-scrollbar" style="max-width: 284px;">
-            <Tags tags={Tags1} on:tags={handleTags} maxTags={10} splitWith={"/"}  placeholder={"Ingrese los numeros de las evidencias"}  minChars={3}/>
-          </div>
-          
-        </fieldset>
+       
       </fieldset>
       <section class="field-row" style="justify-content: space-between;">
         <button disabled={Constripado ? true : false} on:click={CreateNewDispatch}>Accept</button>
