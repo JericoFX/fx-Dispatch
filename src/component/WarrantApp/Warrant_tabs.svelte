@@ -59,18 +59,12 @@
 
   function handleClick(e: { _cells: { data: any; }[]; }, b: any) {
     openTab(e._cells[0].data)
-    console.log(JSON.stringify($PLAYER_WARRANTS.includes(e._cells[0].data)))
     
   //   setTimeout(() =>{$PLAYER_WARRANTS[e._cells[0].data].Location = "FUNCIONARA?"
   //   $PLAYER_WARRANTS = $PLAYER_WARRANTS
   
   // },2000)
   }
-
-  function myJoin(array: any[], separator = ' | ') {
-    return array.reduce((s, x, i) => s + (i > 0 ? separator : '') + (x == null ? '' : x), '');
-  }
-
   const GetData = () => {
     for (let index = 0; index < $PLAYER_WARRANTS.length; index++) {
       const element = $PLAYER_WARRANTS[index];
