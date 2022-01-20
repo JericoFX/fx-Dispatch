@@ -5,7 +5,7 @@
 
   import {PLAYER_DISPATCH} from '../store/store';
   import {createEventDispatcher, onDestroy, onMount} from 'svelte';
-  import {DEBUG} from '../util/config';
+  import { fetchNui } from '../util/fetchNui';
   export let open = false;
   export const Expanded = true;
   export let newLat = 0;
@@ -29,8 +29,6 @@
   var mapCenterLat = -5525;
   var mapCenterLng = 3755;
   var gtaOffset = 0.66;
-  var debug = false;
-  var overlay = false;
   var bottomLeft = [-8192, 0];
   var topRight = [0, 8192];
   var bounds = [bottomLeft, topRight];
@@ -172,8 +170,18 @@
     dispatch('closeModal', {open});
   }
 
-  async function DeleteRow(id: string) {
-    $PLAYER_DISPATCH = await $PLAYER_DISPATCH.filter((item) => item.Id !== id);
+function DeleteRow(id: string) {
+console.log(id);
+
+    fetchNui("DeleteDispatch",{id}).then((cb) =>{
+      if(cb){
+        $PLAYER_DISPATCH = $PLAYER_DISPATCH.filter((item) => item.Id !== id);
+        $PLAYER_DISPATCH =  $PLAYER_DISPATCH
+      }else{
+        console.log("error");
+        
+      }
+    })
     map.removeLayer(Markerid[id]);
   }
 </script>
@@ -223,7 +231,8 @@
                 </legend>
                 {Data.Message}
                 <p class="q-mt-sm">
-                  <span><button class="float-left" on:click={(e) => DeleteRow(Data.Id)}>Remove</button> <button on:click={() => ChangeLocation(Data)} class="text-center">Locate</button> <button class="float-right">Assign</button> </span>
+                  <span><button class="float-left" on:click={(e) => DeleteRow(Data.Id)}>Remove</button> <button on:click={() => ChangeLocation(Data)} class="text-center">Locate</button>  </span>
+                  <!-- <button class="float-right">Assign</button> -->
                 </p>
               </fieldset>
             {/each}

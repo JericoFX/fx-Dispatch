@@ -72,7 +72,7 @@
   <div class="e01 non-selectable">
     <div class="playerlist">
       {#each $JOB_PLAYERS as players}
-  {@const Grado = players.grade.grade}
+
         <fieldset style="flex:auto;">
           <div class="relative text-center" style={players.isboss ? 'background-color:#8badc12e;' : ''}>
             <img src="https://i.blogs.es/0cfd70/6cc2d180-c223-4fd4-973f-62b0f53302f9/1366_2000.jpeg" alt="" style="position:aboslute;width:250px;height:250px;" />
@@ -82,7 +82,7 @@
             <span>
               <p class="text-h5">Name: {players.name}</p>
               <br />
-              <p class="text-h6">Rank: {Grado.name}</p>
+              <p class="text-h6">Rank: {players.grade.name}</p>
               <br />
               <p class="text">Phone: {players.phone}</p>
               <br />

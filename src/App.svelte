@@ -4,7 +4,7 @@
   import Router from 'svelte-spa-router';
   import VehicleApp from './component/VehiclesApp/VehiclesApp.svelte';
   import Warrant from './component/WarrantApp/Warrant_index.svelte';
-  import {JOB_NAME, IS_VISIBLE, JOB_PLAYERS, PLAYER_DATA, PLAYER_DISPATCH, JOB_MONEY, JOB_RANKS} from './store/store';
+  import {JOB_NAME, IS_VISIBLE, JOB_PLAYERS, PLAYER_DATA, PLAYER_DISPATCH, JOB_MONEY, JOB_RANKS, PLAYER_WARRANTS} from './store/store';
   import routes from './util/router';
   import {useNuiEvent} from './util/useNuiEvent';
   import {fetchNui} from './util/fetchNui';
@@ -17,18 +17,14 @@
     $JOB_PLAYERS = players_jobs;
     $PLAYER_DATA = player;
     $JOB_RANKS = ranks;
-    if (DEBUG) {
-      console.log(JSON.stringify($JOB_PLAYERS));
-    }
+    // $PLAYER_DATA =  $PLAYER_DATA
   });
 
-  useNuiEvent('GetDispatchData', ({Name, Message, Phone, Street, Coords}) => {
-    $PLAYER_DISPATCH.push({Name, Message, Phone, Street, Coords});
-    if (DEBUG) {
-      console.log(JSON.stringify($PLAYER_DISPATCH));
-    }
-    $PLAYER_DISPATCH = $PLAYER_DISPATCH;
-   
+  useNuiEvent('GetDispatchData', ({Data}) => {
+    $PLAYER_DISPATCH = Data;
+  });
+  useNuiEvent('GetWarrantsData', ({Data}) => {
+    $PLAYER_WARRANTS = Data;
   });
 
   useNuiEvent('UpdatePlayers', ({players}) => {

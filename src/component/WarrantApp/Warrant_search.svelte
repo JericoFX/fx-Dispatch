@@ -1,51 +1,55 @@
 <script lang="ts">
-  import {PLAYER_DATA, VEHICLE_DATA} from '../../store/store';
-import PlayerData from '../Dialogos/PlayerData.svelte';
+  import {fetchNui} from '../../util/fetchNui';
   import Vehicle from '../VehiclesApp/VehiclesApp.svelte';
-  let id = ""
-  let Name = ""
-  let LastName = ""
-  let Job =""
-  let Rank =""
-  let Delitos = ""
-  let open = false
+  let id = '';
+  let Name = '';
+  let LastName = '';
+  let Job = '';
+  let Rank = '';
+  let Delitos = ''; // Para implementar mas adelante
+  let open = false;
+  $: VehicleList = [];
   const viewVehicleData = (plate: string) => {
     let Id = document.getElementById('Veh');
-    open = true
+    open = true;
     let m = new Vehicle({
       target: Id,
       props: {
         Open: open,
         Placa: plate,
+        VehicleOwner: `${Name} ${LastName}`,
       },
     });
 
-    m.$on("CloseModal",(id)=>{
-      closeVehApp()
-    })
-    return m
+    m.$on('CloseModal', (id) => {
+      closeVehApp();
+    });
+    return m;
   };
 
-
-  const closeVehApp = () =>{
-    open = false
-  }
-  const getPlayerInfo = () =>{
-    const Data = $PLAYER_DATA.filter(Player => Player.citizenid === id)
-    const DataJson = JSON.parse(Data[0].charinfo)
-    const DataJson1 = JSON.parse(Data[0].job)
-    Name = DataJson.firstname
-    LastName = DataJson.lastname
-    Job = DataJson1.label
-    Rank = DataJson1.grade.name
-  }
+  const closeVehApp = () => {
+    open = false;
+  };
+  const getPlayerInfo = () => {
+    fetchNui('GetVehicleWarrants', {id}).then((cb) => {
+      if (cb) {
+        const Data = cb.Player[0];
+        VehicleList = cb.Vehicles;
+        VehicleList = VehicleList;
+        Name = Data.Name;
+        LastName = Data.LastName;
+        Job = Data.Job;
+        Rank = Data.Rank;
+      }
+    });
+  };
 </script>
 
 <div class="window-body fit non-selectable">
   <fieldset>
     <legend>Search Player</legend>
     <p>
-      <input bind:value="{id}"  placeholder="Search By name or Citizenid" class="q-mr-sm" type="text" style="width:200px;" />
+      <input bind:value={id} placeholder="Search By name or Citizenid" class="q-mr-sm" type="text" style="width:200px;" />
       <button on:click={getPlayerInfo}>Search</button>
     </p>
     <fieldset>
@@ -72,31 +76,28 @@ import PlayerData from '../Dialogos/PlayerData.svelte';
         <p>Rank : {Rank}</p>
         <hr class="solid q-mb-md" />
         <br />
-        <p>Delitos : </p>
+        <p>Delitos :</p>
         <hr class="solid q-mb-md" />
         <br />
       </fieldset>
       <fieldset class="float-left scroll" style="width: 50vh;height:297px;">
         <legend> Vehicles </legend>
         <ul class="vehicle q-ml-lg text-center text-subtitle1">
-          {#each $VEHICLE_DATA as veh}
-            <li on:click={() => viewVehicleData(veh.plate)} class="q-mt-md q-mb-sm text-uppercase">
-              {veh.vehicle}
-              {veh.plate}
+          {#if VehicleList.length}
+            {#each VehicleList as veh}
+              <li on:click={() => viewVehicleData(veh.plate)} class="q-mt-md q-mb-sm text-uppercase">
+                {veh.vehicle}
+                {veh.plate}
+                <hr class="solid q-mb-md q-mt-md" />
+              </li>
+            {/each}
+          {:else}
+            <li class="q-mt-md q-mb-sm text-uppercase">
+              <p>No Vehicle Data</p>
               <hr class="solid q-mb-md q-mt-md" />
-            </li>
-          {/each}
+            </li>{/if}
         </ul>
       </fieldset>
-      <!-- <fieldset class="float-left" style="width: 50vh;height:297px;">
-        <legend>Vehicle Information</legend>
-        <p>
-          Model
-        </p>
-        <p>
-          Plate
-        </p>
-      </fieldset> -->
     </fieldset>
   </fieldset>
 </div>

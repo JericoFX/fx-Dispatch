@@ -2,6 +2,7 @@
   import {createEventDispatcher} from 'svelte';
 
   import {PLAYER_WARRANTS} from '../../store/store';
+import { fetchNui } from '../../util/fetchNui';
   const dispatch = createEventDispatcher();
 
   export let id = 0;
@@ -11,12 +12,16 @@
     open = false;
     dispatch('closeTab', {open});
   };
-  $: Data = $PLAYER_WARRANTS.filter((w) => w.id === id);
+  $: Data = $PLAYER_WARRANTS.filter((w: { id: number; }) => w.id === id);
   
   function deleteRow() {
-    Data = $PLAYER_WARRANTS.filter((w) => w.id !== id);
+    Data = $PLAYER_WARRANTS.filter((w: { id: number; }) => w.id !== id);
     $PLAYER_WARRANTS = Data;
     closeTab();
+  }
+  function locateID(){
+    let Coords = Data[0].Coords
+    fetchNui("SetMarkerWarrant",{Coords})
   }
 </script>
 
@@ -34,13 +39,14 @@
         {#if Data.length}
           <p class="text-subtitle2"><span class="text-subtitle1">ID: </span> {Data[0].id}</p>
           <p class="text-subtitle2"><span class="text-subtitle1">Title:</span> {Data[0].Title}</p>
-          <p class="text-subtitle2"><span class="text-subtitle1">Location: {Data[0].Location}</span></p>
+          <p class="text-subtitle2"><span class="text-subtitle1">Location: {Data[0].Coords}</span></p>
           <p class="text-subtitle2"><span class="text-subtitle1">Description:</span> {Data[0].Description}</p>
         {/if}
       </fieldset>
       <div class="field-row" style="justify-content: space-between;">
         <button on:click={closeTab}>Accept</button>
         <button on:click={closeTab}>Cancel</button>
+        <button on:click={locateID}>Locate</button>
         <button on:click={deleteRow}>Delete</button>
       </div>
     </div>

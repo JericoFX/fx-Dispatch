@@ -1,9 +1,11 @@
 <script lang="ts">
-  import {JOB_NAME, JOB_PLAYERS, JOB_RANKS, PLAYER_DATA, PLAYER_DISPATCH, PLAYER_WARRANTS} from '../../store/store';
+  import {JOB_NAME, JOB_PLAYERS, PLAYER_DATA,  PLAYER_WARRANTS} from '../../store/store';
 
-  const Name = JSON.parse($PLAYER_DATA[0].charinfo);
-  $: Players = $JOB_PLAYERS.filter((item) => item.grade.onduty);
-  $: Online = $JOB_PLAYERS.filter((item) => item.isOnline);
+  //const Name = JSON.parse();
+
+  
+  $: Players = $JOB_PLAYERS.filter((item: { grade: { onduty: any; }; }) => item.grade.onduty);
+  $: Online = $JOB_PLAYERS.filter((item: { isOnline: any; }) => item.isOnline);
   $: Warrants = $PLAYER_WARRANTS.length;
 
 

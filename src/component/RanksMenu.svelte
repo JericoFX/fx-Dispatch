@@ -21,7 +21,7 @@
     let Name = name.name
     fetchNui('ChangeRank', {Name, source}).then((cb) => {
       if (cb) {
-        let data = $JOB_PLAYERS.filter((item) => item.source === source);
+        let data = $JOB_PLAYERS.filter((item: { source: string; }) => item.source === source);
         toast.push(`${data[0].name} has a new rank from ${data[0].grade.name} to ${name}`, {
           theme: {
             '--toastBackground': '#48BB78',

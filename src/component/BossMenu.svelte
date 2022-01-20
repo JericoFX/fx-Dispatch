@@ -10,7 +10,7 @@ import { fetchNui } from '../util/fetchNui';
   let deposit = 0;
   let OpenData1 = false;
   const HandleData = (Data: string, money: number) => {
-    console.log(Data);
+
     
     Selection = Data;
     open = true;
